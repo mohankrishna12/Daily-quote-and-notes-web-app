@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Daily Quote & Notes</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    background: #4cafef;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  }
+  main {
+    flex: 1;
+    max-width: 700px;
+    margin: 2rem auto;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+  }
+  .quote {
+    font-style: italic;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: #555;
+  }
+  .author {
+    text-align: right;
+    font-weight: bold;
+    color: #888;
+    margin-bottom: 1.5rem;
+  }
+  textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    resize: vertical;
+  }
+  button {
+    margin-top: 1rem;
+    background: #4cafef;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+  button:hover {
+    background: #3b9be0;
+  }
+  .saved-message {
+    margin-top: 0.5rem;
+    color: green;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Daily Quote & Notes</h1>
+</header>
+
+<main>
+  <div class="quote" id="quote"></div>
+  <div class="author" id="author"></div>
+  <textarea id="notes" placeholder="Write your notes for today..."></textarea>
+  <button onclick="saveNotes()">Save Notes</button>
+  <div class="saved-message" id="saved-msg" style="display:none;">Notes saved!</div>
+</main>
+
+<script>
+  const quotes = [
+    {text: "The only way to do great work is to love what you do.", author: "Steve Jobs"},
+    {text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt"},
+    {text: "Do what you can, with what you have, where you are.", author: "Theodore Roosevelt"},
+    {text: "You miss 100% of the shots you don't take.", author: "Wayne Gretzky"},
+    {text: "Start where you are. Use what you have. Do what you can.", author: "Arthur Ashe"},
+    {text: "Success is not the key to happiness. Happiness is the key to success.", author: "Albert Schweitzer"},
+    {text: "Hardships often prepare ordinary people for an extraordinary destiny.", author: "C.S. Lewis"},
+    // ... add more quotes here, ideally at least 30 for more variety
+  ];
+
+  // Get the current date string as YYYY-MM-DD
+  function getDateString() {
+    const d = new Date();
+    return d.toISOString().split('T')[0];
+  }
+
+  // Select quote of the day based on date
+  function getQuoteOfTheDay() {
+    const day = new Date().getDate();
+    // Rotate through quotes array based on day number
+    return quotes[day % quotes.length];
+  }
+
+  // Load and display quote
+  function loadQuote() {
+    const q = getQuoteOfTheDay();
+    document.getElementById('quote').textContent = `"${q.text}"`;
+    document.getElementById('author').textContent = `- ${q.author}`;
+  }
+
+  // Load saved notes from localStorage for today
+  function loadNotes() {
+    const key = 'dailyNotes-' + getDateString();
+    const saved = localStorage.getItem(key);
+    if(saved !== null) {
+      document.getElementById('notes').value = saved;
+    }
+  }
+
+  // Save notes to localStorage with today's date key
+  function saveNotes() {
+    const key = 'dailyNotes-' + getDateString();
+    const notes = document.getElementById('notes').value;
+    localStorage.setItem(key, notes);
+    const msg = document.getElementById('saved-msg');
+    msg.style.display = 'block';
+    setTimeout(() => {
+      msg.style.display = 'none';
+    }, 2000);
+  }
+
+  // Initial load
+  loadQuote();
+  loadNotes();
+</script>
+
+</body>
+</html>
